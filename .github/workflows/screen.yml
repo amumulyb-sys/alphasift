@@ -8,7 +8,7 @@ on:
 
 jobs:
   screen:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # 锁定稳定的系统版本，避开环境频繁变动
 
     steps:
     - name: Checkout repository
@@ -19,16 +19,22 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install Poetry
+    - name: Install Pipx and Poetry
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
+        pip install --user pipx
+        python3 -m pipx ensurepath
+        pipx install poetry
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Install dependencies
-      run: poetry install
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        poetry install
 
     - name: Run AlphaSift Screening
-      run: poetry run alphasift screen volume_breakout --post-analyzer dsa
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        poetry run alphasift screen volume_breakout --post-analyzer dsa
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
