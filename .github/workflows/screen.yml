@@ -1,32 +1,37 @@
-name: AlphaSift Daily Stock Screening
+name: AlphaSift Stock Screening
 
 on:
   schedule:
-    # 每个工作日北京时间 15:30 自动运行 (UTC 时间 07:30)
+    # 每个工作日（周一至周五）北京时间 15:30 自动运行
     - cron: '30 7 * * 1-5'
-  workflow_dispatch: # 允许你手动点击触发
+  workflow_dispatch: # 允许你随时手动点击 Run workflow 触发
 
 jobs:
   screen:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-      - name: Install Dependencies
-        run: |
-          pip install poetry
-          poetry install
+    - name: Install Poetry
+      run: |
+        curl -sSL https://python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Run AlphaSift Screening
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-          DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
-        run: |
-          poetry run alphasift screen volume_breakout --post-analyzer dsa
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run AlphaSift Screening
+      run: poetry run alphasift screen volume_breakout --post-analyzer dsa
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+        DSA_API_URL: ${{ secrets.DSA_API_URL }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
