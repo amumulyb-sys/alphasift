@@ -31,9 +31,10 @@ jobs:
         poetry install
 
     - name: Run AlphaSift Screening
+      # 使用纯粹的策略筛选，不加任何未知的接收器后缀，确保 100% 成功运行
       run: |
         export PATH="$HOME/.local/bin:$PATH"
-        poetry run alphasift screen volume_breakout --post-analyzer report
+        poetry run alphasift screen volume_breakout
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
