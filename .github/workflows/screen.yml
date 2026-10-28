@@ -2,13 +2,12 @@ name: AlphaSift Stock Screening
 
 on:
   schedule:
-    # 每个工作日（周一至周五）北京时间 15:30 自动运行
     - cron: '30 7 * * 1-5'
-  workflow_dispatch: # 允许你随时手动点击 Run workflow 触发
+  workflow_dispatch: 
 
 jobs:
   screen:
-    runs-on: ubuntu-24.04 # 锁定稳定的系统版本，避开环境频繁变动
+    runs-on: ubuntu-24.04 
 
     steps:
     - name: Checkout repository
@@ -32,6 +31,7 @@ jobs:
         poetry install
 
     - name: Run AlphaSift Screening
+      # 重新用回 --post-analyzer dsa 后缀，体验完全体全自动联动！
       run: |
         export PATH="$HOME/.local/bin:$PATH"
         poetry run alphasift screen volume_breakout --post-analyzer dsa
