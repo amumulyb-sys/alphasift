@@ -31,13 +31,10 @@ jobs:
         poetry install
 
     - name: Run AlphaSift Screening
-      # 重新用回 --post-analyzer dsa 后缀，体验完全体全自动联动！
       run: |
         export PATH="$HOME/.local/bin:$PATH"
-        poetry run alphasift screen volume_breakout --post-analyzer dsa
+        poetry run alphasift screen volume_breakout --post-analyzer report
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-        DSA_API_URL: ${{ secrets.DSA_API_URL }}
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
         DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
