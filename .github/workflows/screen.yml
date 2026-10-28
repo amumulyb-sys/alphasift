@@ -40,3 +40,6 @@ jobs:
         EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+        # 显式指定各大邮箱服务器的配置，强制开启安全连接，防范漏信
+        EMAIL_SMTP_HOST: ://qq.com       # 如果你用的是163邮箱，请改成 ://163.com
+        EMAIL_SMTP_PORT: 465               # 大多数国内邮箱加密端口都是 465
